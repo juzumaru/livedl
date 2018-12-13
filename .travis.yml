@@ -1,0 +1,36 @@
+language: go
+sudo: false
+dist: xenial
+matrix:
+  include:
+    # "1.x" always refers to the latest Go version, inc. the patch release.
+    # e.g. "1.x" is 1.11 until 1.11.1 is available.
+    - go: 1.x
+      env: LATEST=true
+
+before_install:
+  - go get github.com/gorilla/websocket
+  - go get golang.org/x/crypto/sha3
+  - go get github.com/mattn/go-sqlite3
+  - go get github.com/gin-gonic/gin
+
+install:
+  - # skip
+
+script:
+  - go build src/livedl.go
+
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key:
+    # Your *encrypted* GitHub key, as the output of the Travis CI CLI tool.
+    secure: "0eRp4M7lWojSJNn0DhH3ZLDKYFgq+ywlK4Mo1dXHEcsrS4CvqhDzeUowrDRVamOJM50OvpEzigl3Auu+Xvwt35C3TNLzE/tZuo1pVLb8Z0+PBOQ3YSar6CBZ22k6O0iQ7Jt5nSN+njqmR/lt30G86jlR2BCTS8OgR0vbN0F2t9jBDvkMqLvZF3mWm7/1c1Y6vS06yssewzEQT5c79xjOh461kDNPKJoBGKREuoVx0I1bcoZCGphbRQFavbdTYuGSfi8ozYbGaHjJ+iQ7fjuigtgtD4Y2c0jps52zrKm1AItQsbdTcMUSdqclowJrlnUcbxsZdDSkih5bMg1b3SpXs8BfLMUgDnYsFgh2U5nvHpAqeE4L2CIzJO2PUvkMAQPz7abWCFp/rzCKttbBGAQWv5cumpVGjHYmisyX+nlYvTizWgYwfsZCHbB9b/cHjC4Cyr5W34BeHg/Kmh/0jokC4xqukS6qvpfkB0tsYkSmxl17vXfTDD2Kh98Ms0y9dpzuL/3HBS5pN70c2xdsRiImhK0yHVQ4YjnEuys/rbO50DZp5pvOzGqv89WBIRXBp4VY/hV6KtRdiSMRlLk/mWlbfVxVuseASEG0NYEco1xXDcsEZYVBlmfP9tuEZ5eOJY5GHa5qbx+r3XqnCVgLOo4A3AaREFqlvXjk5FJ8Mrz+B2U="
+  file:
+  - livedl
+  on:
+    # What to repository to build
+    repo: yayugu/livedl
+    # Only build binaries for tagged commits
+    tags: true
+    condition: $LATEST = true
