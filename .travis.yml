@@ -1,5 +1,6 @@
 language: go
 sudo: false
+dist: xenial
 matrix:
   include:
     # "1.x" always refers to the latest Go version, inc. the patch release.
@@ -19,6 +20,7 @@ script:
   - go get golang.org/x/crypto/sha3
   - go get github.com/mattn/go-sqlite3
   - go get github.com/gin-gonic/gin
+  - go get -t -v ./...
   # Only build binaries from the latest Go release.
   - if [ "${LATEST}" = "true" ]; then gox -os="linux darwin windows" -arch="amd64" -output="livedl.{{.OS}}.{{.Arch}}" -ldflags "-X main.Rev=`git rev-parse --short HEAD`" -verbose ./...; fi
 
